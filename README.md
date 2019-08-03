@@ -1,5 +1,8 @@
 | Tipo | Descrição | Origem | Destino |
 | ------ | ------ | ------ | ------ | 
-| C | Verifica se a conta existe. | Cliente | Servidor |
-| C | Conta existe, Conectado. | Servidor | Cliente |
-| c | Conta não Existe. | Servidor | Cliente |
+| A | Verifica se a conta existe. | Cliente | Servidor |
+| A | Conta existe, Conectado. | Servidor | Cliente |
+| a | Conta não Existe. | Servidor | Cliente |
+| C | Criar nova conta. | Cliente | Servidor |
+| C | Conta criada. | Servidor | Cliente |
+| c | Conta não criada. | Servidor | Cliente |

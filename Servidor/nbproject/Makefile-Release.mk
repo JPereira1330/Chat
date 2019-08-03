@@ -35,6 +35,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/BancoDB.o \
+	${OBJECTDIR}/Conta.o \
+	${OBJECTDIR}/Lib/Msg.o \
+	${OBJECTDIR}/Lib/SocketServer.o \
+	${OBJECTDIR}/Lib/sys_log.o \
+	${OBJECTDIR}/Processos.o \
 	${OBJECTDIR}/main.o
 
 
@@ -61,6 +67,36 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/servidor: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/servidor ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/BancoDB.o: BancoDB.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BancoDB.o BancoDB.cpp
+
+${OBJECTDIR}/Conta.o: Conta.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Conta.o Conta.cpp
+
+${OBJECTDIR}/Lib/Msg.o: Lib/Msg.cpp
+	${MKDIR} -p ${OBJECTDIR}/Lib
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Lib/Msg.o Lib/Msg.cpp
+
+${OBJECTDIR}/Lib/SocketServer.o: Lib/SocketServer.cpp
+	${MKDIR} -p ${OBJECTDIR}/Lib
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Lib/SocketServer.o Lib/SocketServer.cpp
+
+${OBJECTDIR}/Lib/sys_log.o: Lib/sys_log.c
+	${MKDIR} -p ${OBJECTDIR}/Lib
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Lib/sys_log.o Lib/sys_log.c
+
+${OBJECTDIR}/Processos.o: Processos.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Processos.o Processos.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}

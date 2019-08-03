@@ -4,15 +4,29 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Arquivos de Cabeçalho"
                    projectFiles="true">
+      <itemPath>BancoDB.h</itemPath>
+      <itemPath>Conta.h</itemPath>
+      <itemPath>Processos.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Arquivos de Código-Fonte"
                    projectFiles="true">
+      <itemPath>BancoDB.cpp</itemPath>
+      <itemPath>Conta.cpp</itemPath>
+      <itemPath>Processos.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Arquivos de Recurso"
                    projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="Lib" displayName="Lib" projectFiles="true">
+      <itemPath>Lib/Msg.cpp</itemPath>
+      <itemPath>Lib/Msg.h</itemPath>
+      <itemPath>Lib/SocketServer.cpp</itemPath>
+      <itemPath>Lib/SocketServer.h</itemPath>
+      <itemPath>Lib/sys_log.c</itemPath>
+      <itemPath>Lib/sys_log.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Arquivos de Teste"
@@ -26,6 +40,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>Lib</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">
@@ -36,6 +53,30 @@
       </toolsSet>
       <compileType>
       </compileType>
+      <item path="BancoDB.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BancoDB.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Conta.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Conta.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lib/Msg.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Lib/Msg.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lib/SocketServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Lib/SocketServer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lib/sys_log.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Lib/sys_log.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Processos.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Processos.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -59,6 +100,30 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="BancoDB.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BancoDB.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Conta.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Conta.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lib/Msg.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Lib/Msg.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lib/SocketServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Lib/SocketServer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lib/sys_log.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Lib/sys_log.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Processos.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Processos.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>

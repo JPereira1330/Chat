@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     SocketClient sc;
     
     sc.setIP(argv[1]);
-    sc.setPort( atoi(argv[2]) );
+    sc.setPort(atoi(argv[2]));
     
     proc.setSocketClient(&sc);
     proc.start();
