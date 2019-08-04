@@ -11,6 +11,7 @@
 class Conta {
 public:
     Conta();
+    Conta(int login, int senha);
     Conta(const Conta& orig);
     virtual ~Conta();
     

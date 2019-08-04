@@ -8,6 +8,12 @@
 #include "Conta.h"
 
 Conta::Conta() {
+    SetAuth(false);
+}
+
+Conta::Conta(int login, int senha){
+    SetLogin(login);
+    SetSenha(senha);
 }
 
 Conta::Conta(const Conta& orig) {

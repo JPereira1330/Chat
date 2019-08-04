@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   Processos.h
  * Author: dev
@@ -14,9 +8,19 @@
 #ifndef PROCESSOS_H
 #define PROCESSOS_H
 
-#include <thread>
+#include "Conta.h"
 #include "Lib/Msg.h"
 #include "BancoDB.h"
+
+// Tipo de mensagem para autenticação.
+#define TYPE_AUTH       'A' // Para pacote Recebido
+#define TYPE_AUTH_SUCE  'A' // Para pacote de Sucesso
+#define TYPE_AUTH_FAIL  'a' // Para pacote de Falha
+
+// Tipo de mensagem para criar conta
+#define TYPE_CREA       'C' // Para pacote Recebido
+#define TYPE_CREA_SUCE  'C' // Para pacote de Sucesso
+#define TYPE_CREA_FAIL  'c' // Para pacote de Falha
 
 using namespace std;
 
@@ -30,12 +34,28 @@ public:
     void setHandle(int handle);
     int getHandle();
     
+    void setBancoDB(BancoDB *db);
+    BancoDB *getBancoDB();
+    
+    void setConta(Conta *acc);
+    Conta *getConta();
+    
     int start();
     static void run(Processos *proc);
     
 private:
     int handle;
+    Conta *conta;
+    BancoDB *dbc;
     
+    // Metodo responsavel por autenticar (ou não) a conta do cliente.
+    static Conta *autenticar(Processos *proc, Msg *msg);
+    
+    // Metodo responsavel por cadastrar novo usuario
+    static Conta *cadastrarUser(Processos *proc, Msg *msg);
+    
+    // Envia para o cliente a resposta da operação, se funcionou ou não.
+    static int enviaResultado(Processos *proc, char tipo);
     
 };
 

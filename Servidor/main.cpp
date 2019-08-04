@@ -28,12 +28,14 @@ int main(int argc, char** argv) {
     sockSrv.openSocket();
     
     do{
+        
         log_write("Aguardando conexão.");
-        proc = new Processos();
         hand = sockSrv.acceptSocket();
         log_write("Conexão efetuada com o handler: %d", hand);
         
-        // DEFINIR PROC
+        proc = new Processos();    
+        proc->setHandle(hand);
+        proc->start();
         
     }while(1);
     
