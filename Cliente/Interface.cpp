@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <string>
 #include "Interface.h"
 #include "Conta.h"
 
@@ -33,4 +34,41 @@ void Interface::printTelaLogin(Conta *conta){
     conta->SetSenha(sen);
     
     return;
+}
+
+void Interface::printCriarConta(Conta* conta){
+    
+    int login;
+    int senha;
+    string nome;
+    
+    // Caputando o login do cliente caso ainda não tenha
+    if(conta->GetLogin() == 0){
+        cout << "Login: ";
+        fflush(stdout);
+        cin >> login;
+        cout << endl;
+    }
+    
+    // Capturando a senha do usuario caso ainda não tenha
+    if(conta->GetSenha() == 0){
+        cout << "Senha: ";
+        fflush(stdout);
+        cin >> senha;
+        cout << endl;
+    }
+    
+    // Capturando o nome do usuario caso ainda não tenha
+    if(conta->GetNome() == NULL){
+        cout << "Nome: ";
+        fflush(stdout);
+        cin >> nome;
+        cout << endl;
+    }
+    
+    return;
+}
+
+void Interface::printTelaPrincipal(Conta* conta){
+    
 }

@@ -9,6 +9,7 @@
 #define PROCESSOS_H
 
 #include "Conta.h"
+#include "Lib/Msg.h"
 #include "Lib/SocketClient.h"
 
 #define TYPE_AUTH 'A' // Request para autenticação
@@ -37,10 +38,17 @@ private:
     int autenticar(Conta *conta);
     
     /**
-     * Metodo que captura retorno do servidor quanto a requisição.
-     * @return 0 fail, Minusculo servidor recusou, Maiuscula servidor aceitou.
+     * Envia para o servidor uma conta para ser criada.
+     * @param conta Objeto a ser enviado para os servidor
+     * @return 0 fail, 1 true.
      */
-    char capturarTipo();
+    int criarConta(Conta *conta);
+    
+    /**
+     * Metodo que captura retorno do servidor quanto a requisição.
+     * @return 0 fail, 1 true
+     */
+    int getServerReturn(Msg *msg);
     
 };
 

@@ -20,7 +20,9 @@ public:
     virtual ~Interface();
     
     void printTelaLogin(Conta* conta);
-    
+    void printCriarConta(Conta* conta);
+    void printTelaPrincipal(Conta* conta);
+
 private:
 
 };

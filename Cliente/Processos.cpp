@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <cstdlib>
 #include "Processos.h"
 #include "Interface.h"
 #include "Lib/sys_log.h"
@@ -39,21 +40,32 @@ int Processos::start(){
     Interface inter;
     
     conta = new Conta();
-    
-    log_write("Start - Capturando credenciais de acesso.");
+        
+    log_write("Capturando credenciais de acesso.");
     inter.printTelaLogin(conta);
     
-    log_write("Start - Incializando conexão.");
+    log_write("Incializando conexão.");
     ret = this->getSocketClient()->connectSocket();
     
     if( ret == 0 ){
-        log_write("Start - Não foi possivel se conectar.");
+        log_write("Não foi possivel se conectar ao servidor.");
         return 0;
     }
       
-    autenticar(conta);
+    ret = autenticar(conta);
     
-    cout << conta->IsAuth();
+    switch(ret){
+        case 1:
+            inter.printTelaPrincipal(conta);
+            
+            break;
+        case 0:
+            log_write("Nao foi encontrado o usuario informado, criando um novo.");
+            inter.printCriarConta(conta);
+            criarConta(conta);
+            start();
+            break;
+    }
     
     return 1;
 }
@@ -89,10 +101,14 @@ int Processos::autenticar(Conta *conta){
         return 0;
     }
    
-    ret = capturarTipo();
-    delete(msg);
+    ret = getServerReturn(msg);
    
-    if(ret == TYPE_AUTH){
+    if(ret == 0){
+        log_write("Ocorreu um erro ao receber os dados do servidor");
+        return 0;
+    }
+    
+    if(msg->getType() == TYPE_AUTH){
         conta->SetSenha(0);
         conta->SetAuth(true);
     }else{
@@ -100,31 +116,120 @@ int Processos::autenticar(Conta *conta){
         conta->SetAuth(false);
     }
     
-    cout << conta->IsAuth();
+    // Limpando memoria
+    free(buffer);
+    free(msg);
+    
+    log_write("[TEMP] Autenticacao: %d", conta->IsAuth());
+    
     return 1;
 }
 
-char Processos::capturarTipo(){
+int Processos::criarConta(Conta *conta){
+   
+    Msg *msg;
+    char *buffer;
+    unsigned int len;
+    
+    log_write("Criando pacote para comunicação.");
+    msg = new Msg();
+    msg->setType('C');
+    msg->add(conta->GetLogin());
+    msg->add(conta->GetSenha());
+    
+    len = msg->getBuffer(&buffer);
+    log_write("Buffer de %d bytes.", len);
+    
+    if(len == 0){
+        log_write("Tamanho do buffer invalido.");
+        free(buffer);
+        delete(msg);
+        return 0;
+    }
+    
+    log_write("Enviando %d Bytes para o servidor.", len);
+    len = this->getSocketClient()->writeSocket(buffer, len);
+    log_write("Enviado %d Bytes.", len);
+    
+    if(len == 0){
+        log_write("Ocorreu um erro durante o envio.");
+        free(buffer);
+        delete(msg);
+        return 0;
+    }
+    
+    log_write("Aguardando resposta do servidor.");
+    len = getServerReturn(msg);
+    
+    if(len == 0){
+        log_write("Ocorreu um erro na leitura da resposta do servidor.");
+        free(buffer);
+        delete(msg);
+        return 0;
+    }
+    
+    switch(msg->getType()){
+        case 'C':
+            log_write("Conta criada com sucesso!");
+            return 1;
+            break;
+        case 'c':
+            log_write("Conta nao foi criada.");
+            free(buffer);
+            delete(msg);
+            return 0;
+            break;
+        default:
+            log_write("Ocorreu algum erro nao indentificado.");
+            free(buffer);
+            delete(msg);
+            return 0;
+            break;
+    }
+    
+    return 0;
+}
+
+int Processos::getServerReturn(Msg* msg){
     
     char tipo;
+    char *buffer;
     unsigned int len;
-    unsigned int lenBuffer;
+    unsigned int ret;
     
-    len = this->getSocketClient()->readSocket(&lenBuffer, sizeof(unsigned int));
-    log_write("Autenticador - Bytes Recebidos do servidor: %d bytes, Buffer: %d bytes.", len, lenBuffer);
+    // Capturando tamanho do buffer
+    ret = getSocketClient()->readSocket(&len, sizeof(unsigned int));
     
-    if(len == 0){
-        log_write("Autenticador - Ocorreu um erro durante o recebimento dos dados.");
+    if(ret < 0){
+        log_write("Erro de leitura");
         return 0;
     }
     
-    len = this->getSocketClient()->readSocket(&tipo, lenBuffer);
-    log_write("Autenticador - Bytes Recebidos do servidor: %d bytes", len);
+    // Capturando tipo do pacote
+    ret = getSocketClient()->readSocket(&tipo, sizeof(char));
     
-    if(len == 0){
-        log_write("Autenticador - Ocorreu um erro durante o recebimento do tipo.");
+    if(ret < 0){
+        log_write("Erro de leitura");
         return 0;
     }
     
-    return tipo;
+    msg->setType(tipo);
+        
+    if(len == 0){       // Caso só receba o tipo
+        return 1;
+    }
+    
+    // Continua caso tenha mais dados no pacote.
+    buffer = (char *) malloc(len);
+    ret = getSocketClient()->readSocket(&buffer, len);
+    
+    if(ret <= 0){
+        free(buffer);
+        return 0;
+    }
+    
+    msg->setBuffer(buffer, len);
+    free(buffer);
+    
+    return 1;
 }

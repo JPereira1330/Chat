@@ -180,9 +180,7 @@ Conta *Processos::autenticar(Processos *proc, Msg *msg){
         delete(conta);
         return NULL;
     }
-    
-
-    
+   
     return conta;
 }
 

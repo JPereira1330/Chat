@@ -20,6 +20,8 @@ public:
     int add(int valor);
     int add(unsigned int valor);
     int add(char *str, int len);
+    
+    char getType();
     unsigned int getBuffer(char **buffer); 
     
     int next(int *valor);
