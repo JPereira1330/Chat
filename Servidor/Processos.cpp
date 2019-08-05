@@ -46,7 +46,7 @@ Conta *Processos::getConta(){
 int Processos::start(){
  
     log_write("Carregando Banco de dados");
-    //BancoDB->carregarArquivo();
+    dbc->carregarDB();
     
     run(this);
     
@@ -131,7 +131,7 @@ Conta *Processos::cadastrarUser(Processos *proc, Msg *msg){
     msg->next(&senha);
     log_write("[Handle %d] - Senha recebida: %d.", proc->getHandle(), senha);   // [TEMP] Retirar depois a senha
     
-    if(login == proc->getBancoDB()->procurarConta(login)->GetLogin()){
+    if(login == proc->getBancoDB()->encontrar(login)->GetLogin()){
             log_write("[Handle %d] - Conta já existe.", proc->getHandle());
             enviaResultado(proc, TYPE_CREA_FAIL);
             return NULL;
@@ -140,7 +140,7 @@ Conta *Processos::cadastrarUser(Processos *proc, Msg *msg){
     conta = new Conta(login, senha);
     log_write("[Handle %d] - Conta criada.", proc->getHandle());
 
-    proc->getBancoDB()->adicionarConta(conta);
+    proc->getBancoDB()->add(conta);
     log_write("[Handle %d] - Conta adicionada no banco.", proc->getHandle());
     
     return conta;
@@ -160,9 +160,9 @@ Conta *Processos::autenticar(Processos *proc, Msg *msg){
     
     conta = new Conta();
     log_write("[Handle %d] - Procurando por conta.", proc->getHandle());
-    conta = proc->getBancoDB()->procurarConta(login);
+    conta = proc->getBancoDB()->encontrar(login);
     
-    if(conta != NULL){
+    if(conta == NULL){
         log_write("[Handle %d] - Conta nao encontrada.", proc->getHandle());
         enviaResultado(proc, TYPE_AUTH_FAIL);
         delete(conta);
@@ -180,6 +180,8 @@ Conta *Processos::autenticar(Processos *proc, Msg *msg){
         delete(conta);
         return NULL;
     }
+    
+
     
     return conta;
 }
@@ -203,7 +205,7 @@ int Processos::enviaResultado(Processos *proc, char tipo){
     }
     
     len = SocketServer::writeSocket(proc->getHandle(), buffer, len);
-    log_write("[Handle %d] -Total de %d bytes enviados.", proc->getHandle(), len);
+    log_write("[Handle %d] - Total de %d bytes enviados.", proc->getHandle(), len);
     
     if(len == 0){
         log_write("[Handle %d] - Ocorreu um erro ao enviar resposta.", proc->getHandle());

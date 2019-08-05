@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
         
         proc = new Processos();    
         proc->setHandle(hand);
+        proc->setBancoDB(&bdb);
         proc->start();
         
     }while(1);

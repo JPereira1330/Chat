@@ -1,9 +1,8 @@
-
 /* 
  * File:   BancoDB.h
  * Author: dev
  *
- * Created on 3 de Agosto de 2019, 02:21
+ * Created on 5 de Agosto de 2019, 00:26
  */
 
 #ifndef BANCODB_H
@@ -26,32 +25,31 @@ public:
     BancoDB();
     BancoDB(const BancoDB& orig);
     virtual ~BancoDB();
-
-    /**
-     * Adiciona conta na lista
-     * @param conta
-     * @return 0 fail, 1 true.
-     */
-    void adicionarConta(Conta *conta);
     
     /**
-     * Salva a lista num arquivo
-     * @return 0 fail, 1 true.
+     * Adiciona conta na lista.
+     * @param conta - > Objeto conta a ser adicionado
      */
-    int salvarArquivo();
+    void add(Conta *conta);
     
     /**
-     * Carrega os daados da lista
-     * @return 0 fail, 1 true.
+     * Procura e retorna a conta do usuario pela numero da conta.
+     * @param login -> Numero da login
+     * @return Ponteiro de conta
      */
-    int carregarArquivo();
+    Conta *encontrar(int login);
     
     /**
-     * Procura uma determinada conta na lista
-     * @param idConta Numero da conta que deverá ser encontrada
-     * @return Conta encontrada
+     * Salva o banco de dados num arquivo
+     * @return 0 fail, 1 true. 
      */
-    Conta *procurarConta(int login);
+    int salvarDB();
+    
+    /**
+     * Carrega o banco de dados para a memoria.
+     * @return 0 fail, 1 true.
+     */
+    int carregarDB();
     
 private:
     list<Conta *> contas;
