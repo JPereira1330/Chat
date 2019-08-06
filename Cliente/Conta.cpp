@@ -43,10 +43,10 @@ void Conta::SetSenha(int senha) {
     this->senha = senha;
 }
 
-char* Conta::GetNome() {
+string Conta::GetNome() {
     return nome;
 }
 
-void Conta::SetNome(char* nome) {
+void Conta::SetNome(string nome) {
     this->nome = nome;
 }

@@ -8,6 +8,10 @@
 #ifndef CONTA_H
 #define CONTA_H
 
+#include <string>
+
+using namespace std;
+
 class Conta {
 public:
     Conta();
@@ -23,14 +27,14 @@ public:
     int GetSenha();
     void SetSenha(int senha);
     
-    char* GetNome();
-    void SetNome(char* nome);
+    string GetNome();
+    void SetNome(string nome);
     
 private:
     int login;
     int senha;
     bool auth;
-    char *nome;
+    string nome;
     
 };
 

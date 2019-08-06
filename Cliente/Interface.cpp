@@ -41,6 +41,8 @@ void Interface::printCriarConta(Conta* conta){
     int login;
     int senha;
     string nome;
+
+    cout << " [ CRIANDO CONTA ] " << endl;
     
     // Caputando o login do cliente caso ainda não tenha
     if(conta->GetLogin() == 0){
@@ -48,6 +50,8 @@ void Interface::printCriarConta(Conta* conta){
         fflush(stdout);
         cin >> login;
         cout << endl;
+    }else{
+        cout << "Login: " << conta->GetLogin() << endl;
     }
     
     // Capturando a senha do usuario caso ainda não tenha
@@ -59,12 +63,16 @@ void Interface::printCriarConta(Conta* conta){
     }
     
     // Capturando o nome do usuario caso ainda não tenha
-    if(conta->GetNome() == NULL){
+    if(conta->GetNome().empty()){
         cout << "Nome: ";
         fflush(stdout);
         cin >> nome;
         cout << endl;
     }
+    
+    conta->SetLogin(login);
+    conta->SetSenha(senha);
+    conta->SetNome(nome);
     
     return;
 }

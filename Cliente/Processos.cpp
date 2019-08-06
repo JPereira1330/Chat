@@ -52,14 +52,15 @@ int Processos::start(){
         return 0;
     }
       
-    ret = autenticar(conta);
+    autenticar(conta);
+    
+    ret = conta->IsAuth();
     
     switch(ret){
-        case 1:
+        case true:
             inter.printTelaPrincipal(conta);
-            
             break;
-        case 0:
+        case false:
             log_write("Nao foi encontrado o usuario informado, criando um novo.");
             inter.printCriarConta(conta);
             criarConta(conta);
@@ -119,9 +120,7 @@ int Processos::autenticar(Conta *conta){
     // Limpando memoria
     free(buffer);
     free(msg);
-    
-    log_write("[TEMP] Autenticacao: %d", conta->IsAuth());
-    
+        
     return 1;
 }
 
@@ -130,19 +129,20 @@ int Processos::criarConta(Conta *conta){
     Msg *msg;
     char *buffer;
     unsigned int len;
-    
+       
     log_write("Criando pacote para comunicação.");
     msg = new Msg();
     msg->setType('C');
     msg->add(conta->GetLogin());
     msg->add(conta->GetSenha());
+    len = conta->GetNome().length();
+    msg->add( (char *) conta->GetNome().c_str(), len);
     
     len = msg->getBuffer(&buffer);
     log_write("Buffer de %d bytes.", len);
     
     if(len == 0){
         log_write("Tamanho do buffer invalido.");
-        free(buffer);
         delete(msg);
         return 0;
     }
@@ -153,7 +153,6 @@ int Processos::criarConta(Conta *conta){
     
     if(len == 0){
         log_write("Ocorreu um erro durante o envio.");
-        free(buffer);
         delete(msg);
         return 0;
     }
@@ -163,7 +162,6 @@ int Processos::criarConta(Conta *conta){
     
     if(len == 0){
         log_write("Ocorreu um erro na leitura da resposta do servidor.");
-        free(buffer);
         delete(msg);
         return 0;
     }
@@ -175,13 +173,11 @@ int Processos::criarConta(Conta *conta){
             break;
         case 'c':
             log_write("Conta nao foi criada.");
-            free(buffer);
             delete(msg);
             return 0;
             break;
         default:
-            log_write("Ocorreu algum erro nao indentificado.");
-            free(buffer);
+            log_write("Ocorreu algum erro nao indentificado. %c", msg->getType());
             delete(msg);
             return 0;
             break;

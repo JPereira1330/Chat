@@ -6,6 +6,7 @@
  */
 
 #include <stdlib.h>
+#include <string>
 #include "Processos.h"
 #include "Lib/sys_log.h"
 #include "Lib/SocketServer.h"
@@ -121,15 +122,22 @@ void Processos::run(Processos *proc){
 
 Conta *Processos::cadastrarUser(Processos *proc, Msg *msg){
  
+    int len;
     int login;
     int senha;
+    char *nome;
+    string strNome;
     Conta *conta;
-    
+        
     msg->next(&login);
     log_write("[Handle %d] - Usuario recebido: %d.", proc->getHandle(), login);
     
     msg->next(&senha);
     log_write("[Handle %d] - Senha recebida: %d.", proc->getHandle(), senha);   // [TEMP] Retirar depois a senha
+    
+    len = msg->next(&nome);
+    strNome = string(nome, len);
+    log_write("[Handle %d] - Nome recebida: %s.", proc->getHandle(), strNome);
     
     if(login == proc->getBancoDB()->encontrar(login)->GetLogin()){
             log_write("[Handle %d] - Conta já existe.", proc->getHandle());
