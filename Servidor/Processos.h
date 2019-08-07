@@ -8,19 +8,25 @@
 #ifndef PROCESSOS_H
 #define PROCESSOS_H
 
+#include <thread>
 #include "Conta.h"
 #include "Lib/Msg.h"
 #include "BancoDB.h"
 
-// Tipo de mensagem para autenticação.
+// Tipo de protocolo para autenticação.
 #define TYPE_AUTH       'A' // Para pacote Recebido
 #define TYPE_AUTH_SUCE  'A' // Para pacote de Sucesso
 #define TYPE_AUTH_FAIL  'a' // Para pacote de Falha
 
-// Tipo de mensagem para criar conta
+// Tipo de protocolo para criar conta
 #define TYPE_CREA       'C' // Para pacote Recebido
 #define TYPE_CREA_SUCE  'C' // Para pacote de Sucesso
 #define TYPE_CREA_FAIL  'c' // Para pacote de Falha
+
+// Tipo de protocolo para o envio de mensagem
+#define TYPE_ENVI       'E' // Para pacote Recebido
+#define TYPE_ENVI_SUCE  'E' // Para pacote de Sucesso
+#define TYPE_ENVI_FAIL  'e' // Para pacote de Falha
 
 using namespace std;
 
@@ -54,10 +60,12 @@ private:
     // Metodo responsavel por cadastrar novo usuario
     static Conta *cadastrarUser(Processos *proc, Msg *msg);
     
+    // Encaminha mensagem para destinatario
+    static int encaminharMensagem(Processos *proc, Msg *msg);
+    
     // Envia para o cliente a resposta da operação, se funcionou ou não.
     static int enviaResultado(Processos *proc, char tipo);
-    
+
 };
 
 #endif /* PROCESSOS_H */
-

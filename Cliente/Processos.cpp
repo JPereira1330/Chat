@@ -36,36 +36,53 @@ int Processos::start(){
     
     int ret;
     Conta *conta;
-
     Interface inter;
     
     conta = new Conta();
-        
-    log_write("Capturando credenciais de acesso.");
-    inter.printTelaLogin(conta);
     
-    log_write("Incializando conexão.");
+    log_write("Incializando conexao.");
     ret = this->getSocketClient()->connectSocket();
     
     if( ret == 0 ){
-        log_write("Não foi possivel se conectar ao servidor.");
+        log_write("Nao foi possivel se conectar ao servidor.");
+        free(conta);
         return 0;
     }
-      
+    
+    switch(inter.printTelaInicial()){
+        case 1:
+            log_write("Ja possuo uma conta selecionado.");
+            inter.printTelaLogin(conta);
+            break;
+        case 2:
+            log_write("Ainda nao possuo uma conta selecionado.");
+            inter.printCriarConta(conta);
+            criarConta(conta);
+            break;
+        case 9:
+            log_write("Finalizando sistema.");
+            exit(1);
+            break;
+        default:
+            log_write("Usuario inseriu alguma opcao inexiste.");
+    }
+    
+    log_write("Tentando autenticar.");
     autenticar(conta);
     
     ret = conta->IsAuth();
     
     switch(ret){
         case true:
-            inter.printTelaPrincipal(conta);
+            log_write("Usuario autenticado.");
+            ret = inter.printTelaPrincipal(conta);
+            abrirConversa(conta, ret);
             break;
         case false:
-            log_write("Nao foi encontrado o usuario informado, criando um novo.");
-            inter.printCriarConta(conta);
-            criarConta(conta);
-            start();
+            log_write("Usuario nao autenticado.");
             break;
+        default:
+            log_write("Nao foi possivel identificar o tipo recebido");
     }
     
     return 1;
@@ -124,33 +141,47 @@ int Processos::autenticar(Conta *conta){
     return 1;
 }
 
+int Processos::abrirConversa(Conta *conta, int numero){
+    
+    Msg *msg;
+    
+    log_write("Criando pacote para comunicação.");
+    msg = new Msg();
+    msg->setType(TYPE_ENVM);
+    msg->add(numero);
+    
+    
+    return 1;
+}
+
 int Processos::criarConta(Conta *conta){
    
     Msg *msg;
     char *buffer;
     unsigned int len;
+    unsigned int tamBuffer;
        
     log_write("Criando pacote para comunicação.");
     msg = new Msg();
-    msg->setType('C');
+    msg->setType(TYPE_NEWC);
     msg->add(conta->GetLogin());
     msg->add(conta->GetSenha());
     len = conta->GetNome().length();
     msg->add( (char *) conta->GetNome().c_str(), len);
     
-    len = msg->getBuffer(&buffer);
+    tamBuffer = msg->getBuffer(&buffer);
     log_write("Buffer de %d bytes.", len);
     
-    if(len == 0){
+    if(tamBuffer == 0){
         log_write("Tamanho do buffer invalido.");
         delete(msg);
         return 0;
     }
     
-    log_write("Enviando %d Bytes para o servidor.", len);
-    len = this->getSocketClient()->writeSocket(buffer, len);
+    log_write("Enviando %d Bytes para o servidor.", tamBuffer);
+    len = this->getSocketClient()->writeSocket(buffer, tamBuffer);
     log_write("Enviado %d Bytes.", len);
-    
+        
     if(len == 0){
         log_write("Ocorreu um erro durante o envio.");
         delete(msg);

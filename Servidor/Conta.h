@@ -8,10 +8,13 @@
 #ifndef CONTA_H
 #define CONTA_H
 
+#include <string>
+
+using namespace std;
+
 class Conta {
 public:
     Conta();
-    Conta(int login, int senha);
     Conta(const Conta& orig);
     virtual ~Conta();
     
@@ -24,14 +27,18 @@ public:
     int GetSenha();
     void SetSenha(int senha);
     
-    char* GetNome();
-    void SetNome(char* nome);
+    string GetNome();
+    void SetNome(string nome);
+    
+    int getHandle();
+    void setHandle(int handle);
     
 private:
     int login;
     int senha;
+    int handle;
     bool auth;
-    char *nome;
+    string nome;
     
 };
 

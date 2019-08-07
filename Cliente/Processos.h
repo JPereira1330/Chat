@@ -12,8 +12,9 @@
 #include "Lib/Msg.h"
 #include "Lib/SocketClient.h"
 
-#define TYPE_AUTH 'A' // Request para autenticação
-#define TYPE_NEWC 'C' // Request para criar conta
+#define TYPE_AUTH 'A' // Request para autenticação.
+#define TYPE_NEWC 'C' // Request para criar conta.
+#define TYPE_ENVM 'E' // Request para enviar mensagem.
 
 class Processos {
     
@@ -49,6 +50,14 @@ private:
      * @return 0 fail, 1 true
      */
     int getServerReturn(Msg *msg);
+    
+    /**
+     * 
+     * @param conta
+     * @param numero
+     * @return 
+     */
+    int abrirConversa(Conta *conta, int numero);
     
 };
 

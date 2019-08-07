@@ -12,6 +12,8 @@
 #include <string.h>
 #include "Conta.h"
 
+#define DIR_BANCO "banco.db"
+
 using namespace std;
 
 typedef struct dbconta{
@@ -25,7 +27,7 @@ public:
     BancoDB();
     BancoDB(const BancoDB& orig);
     virtual ~BancoDB();
-    
+
     /**
      * Adiciona conta na lista.
      * @param conta - > Objeto conta a ser adicionado
@@ -38,6 +40,13 @@ public:
      * @return Ponteiro de conta
      */
     Conta *encontrar(int login);
+    
+    /**
+     * Procura e retorna o handle do usuario pela numero da conta.
+     * @param login -> Numero da login
+     * @return Ponteiro de conta
+     */
+    int encontrarHandle(int login);
     
     /**
      * Salva o banco de dados num arquivo

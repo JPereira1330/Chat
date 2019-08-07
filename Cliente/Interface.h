@@ -19,9 +19,10 @@ public:
     Interface(const Interface& orig);
     virtual ~Interface();
     
+    int printTelaInicial();
     void printTelaLogin(Conta* conta);
     void printCriarConta(Conta* conta);
-    void printTelaPrincipal(Conta* conta);
+    int printTelaPrincipal(Conta* conta);
 
 private:
 

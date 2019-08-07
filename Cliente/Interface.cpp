@@ -19,6 +19,22 @@ Interface::Interface(const Interface& orig) {
 Interface::~Interface() {
 }
 
+int Interface::printTelaInicial(){
+    
+    int op;
+    
+    cout << " [ C H A T ] " << endl;
+    cout << " [ 1 ] Ja possuo uma conta." << endl;
+    cout << " [ 2 ] Cadastrar uma nova conta. " << endl;
+    cout << " [ 9 ] Sair do programa." << endl;
+    cout << " [ * ] Opção: ";
+    fflush(stdout);
+    
+    cin >> op;
+    
+    return op;
+}
+
 void Interface::printTelaLogin(Conta *conta){
     
     int log;
@@ -52,6 +68,7 @@ void Interface::printCriarConta(Conta* conta){
         cout << endl;
     }else{
         cout << "Login: " << conta->GetLogin() << endl;
+        login = conta->GetLogin();
     }
     
     // Capturando a senha do usuario caso ainda não tenha
@@ -60,6 +77,9 @@ void Interface::printCriarConta(Conta* conta){
         fflush(stdout);
         cin >> senha;
         cout << endl;
+    }else{
+        cout << "Senha: " << conta->GetSenha() << endl;
+        senha = conta->GetSenha();
     }
     
     // Capturando o nome do usuario caso ainda não tenha
@@ -68,6 +88,9 @@ void Interface::printCriarConta(Conta* conta){
         fflush(stdout);
         cin >> nome;
         cout << endl;
+    }else{
+        cout << "Nome: " << conta->GetNome() << endl;
+        nome = conta->GetNome();
     }
     
     conta->SetLogin(login);
@@ -77,6 +100,14 @@ void Interface::printCriarConta(Conta* conta){
     return;
 }
 
-void Interface::printTelaPrincipal(Conta* conta){
+int Interface::printTelaPrincipal(Conta* conta){
+ 
+    int numero;
     
+    cout << " [ CHAT - " << conta->GetNome() << " ]" << endl;
+    cout << " [ * ] Conversar com: ";
+    fflush(stdout);
+    cin >> numero;
+    
+    return numero;
 }

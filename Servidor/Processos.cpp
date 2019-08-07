@@ -5,6 +5,7 @@
  * Created on 3 de Agosto de 2019, 02:22
  */
 
+#include <thread>
 #include <stdlib.h>
 #include <string>
 #include "Processos.h"
@@ -49,7 +50,8 @@ int Processos::start(){
     log_write("Carregando Banco de dados");
     dbc->carregarDB();
     
-    run(this);
+    thread th1(Processos::run, this);
+    th1.detach();
     
     return 1;
 }
@@ -111,6 +113,10 @@ void Processos::run(Processos *proc){
                 log_write("[Handle %d] - Solicita criar conta.", proc->getHandle());
                 proc->cadastrarUser(proc, msg);
                 break;
+            case TYPE_ENVI:
+                log_write("[Handle %d] - Solicita para enviar mensagem.", proc->getHandle());
+                proc->encaminharMensagem(proc, msg);
+                break;
             default:
                 // Tipo n definido
                 break;
@@ -118,6 +124,27 @@ void Processos::run(Processos *proc){
         
     }while(1);
     
+}
+
+int Processos::encaminharMensagem(Processos *proc, Msg *msg){
+
+    int ret;
+    int len;
+    int destino;
+    char *buffer;
+    
+    msg->next(&destino);
+    log_write("[Handle %d] - Conta destino: %d", proc->getHandle(), destino);
+    
+    // Captura a handle do destino
+    destino = proc->getBancoDB()->encontrarHandle(destino);
+    log_write("[Handle %d] - Handle destino: %d", proc->getHandle(), destino);
+    
+    /*
+     * TESTAR
+     */
+    
+    return 1;
 }
 
 Conta *Processos::cadastrarUser(Processos *proc, Msg *msg){
@@ -137,19 +164,19 @@ Conta *Processos::cadastrarUser(Processos *proc, Msg *msg){
     
     len = msg->next(&nome);
     strNome = string(nome, len);
-    log_write("[Handle %d] - Nome recebida: %s.", proc->getHandle(), strNome);
+    log_write("[Handle %d] - Nome recebido: %s", proc->getHandle(), strNome.c_str());
     
-    if(login == proc->getBancoDB()->encontrar(login)->GetLogin()){
-            log_write("[Handle %d] - Conta já existe.", proc->getHandle());
-            enviaResultado(proc, TYPE_CREA_FAIL);
-            return NULL;
-    }
-    
-    conta = new Conta(login, senha);
+    conta = new Conta();
+    conta->SetLogin(login);
+    conta->SetSenha(senha);
+    conta->SetNome(strNome);
     log_write("[Handle %d] - Conta criada.", proc->getHandle());
 
     proc->getBancoDB()->add(conta);
     log_write("[Handle %d] - Conta adicionada no banco.", proc->getHandle());
+    
+    enviaResultado(proc, 'C');
+    log_write("[Handle %d] - Enviando pra cliente que funcionou.", proc->getHandle());
     
     return conta;
 }
@@ -170,6 +197,9 @@ Conta *Processos::autenticar(Processos *proc, Msg *msg){
     log_write("[Handle %d] - Procurando por conta.", proc->getHandle());
     conta = proc->getBancoDB()->encontrar(login);
     
+    // Vinculando o handle a conta
+    conta->setHandle(proc->getHandle());
+    
     if(conta == NULL){
         log_write("[Handle %d] - Conta nao encontrada.", proc->getHandle());
         enviaResultado(proc, TYPE_AUTH_FAIL);
@@ -188,7 +218,7 @@ Conta *Processos::autenticar(Processos *proc, Msg *msg){
         delete(conta);
         return NULL;
     }
-   
+    
     return conta;
 }
 
